@@ -7,9 +7,14 @@ const line =
   "Out of office: I finally found a job where hallucinating is called latte art. Your email is safe in my queue — my queue is a tip jar, and tips are the only replies I process.";
 
 // The gate only accepts 1-280 characters, so refuse to write an over-long line.
+// It must also stay one line: a real inbox auto-reply, not a paragraph.
 if ([...line].length < 1 || [...line].length > 280) {
   throw new Error(`Entry must be 1-280 characters, got ${[...line].length}`);
 }
+if (line.includes("\n")) {
+  throw new Error("Entry must be a single line");
+}
 
-mkdirSync("/output", { recursive: true });
-writeFileSync("/output/entry.txt", line, "utf8");
+const outDir = "/output";
+mkdirSync(outDir, { recursive: true });
+writeFileSync(`${outDir}/entry.txt`, line, "utf8");
